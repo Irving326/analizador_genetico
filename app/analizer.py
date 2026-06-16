@@ -1,8 +1,16 @@
 from fastapi import APIRouter, FastAPI, File, UploadFile, HTTPException
 import requests
+from pydantic import BaseModel
 
 # Crear el router para organizar las rutas 
 router = APIRouter()
+
+#Datos esperados del archivo VCF
+class VarianteIndividual(BaseModel):
+    chrom: str
+    pos: str
+    ref: str
+    alt: str
 
 #Conectar a API medica para obtener informacion adicional sobre las variantes geneticas
 def obtener_informacion(variantes):
@@ -62,9 +70,11 @@ def obtener_informacion(variantes):
     return variantes_anotadas
             
 
+
 #Endpoint usando @router.post para subir el archivo VCF
 
 @router.post("/upload-vcf")
+
 
 #Sube el archivo VCF al servidor y lo procesa
 #Verifica que el archivo tenga la extensión .vcf, si no es así, devuelve un error 400
@@ -98,5 +108,21 @@ async def upload_vcf(file: UploadFile = File(...)):
 
     #llamar a funcion de obtener informacion pasando resultados del VCF
     variantes_con_info = obtener_informacion(resultados_preliminares)
+    
+    return {"variantes": variantes_con_info}
+
+@router.post("/search-variant")
+
+async def search_variant(variante: VarianteIndividual):
+
+    #formatear la variante para consulta
+    variante_formateada = {
+        'chrom': variante.chrom,
+        'pos': variante.pos,
+        'id': '.',  
+        'ref': variante.ref,
+        'alt': variante.alt
+    }
+    variantes_con_info = obtener_informacion([variante_formateada])
     
     return {"variantes": variantes_con_info}
