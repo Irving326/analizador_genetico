@@ -15,8 +15,8 @@
         resultadoDiv.innerHTML = ""; 
 
         try {
-            // 1. Enviamos la petición y esperamos la respuesta
-            const response = await fetch('http://127.0.0.1:8000/analysis/upload-vcf', {
+            //  Enviamos la petición y esperamos la respuesta
+            const response = await fetch('/analysis/upload-vcf', {
                 method: 'POST',
                 body: formData
             });
@@ -25,10 +25,10 @@
                 throw new Error(`Error en el servidor: ${response.status}`);
             }
 
-            // 2. Convertimos la respuesta a JSON
+            //  Convertimos la respuesta a JSON
             const data = await response.json();
 
-            // 3. Llamamos a la función para pintar los datos
+            // Llamamos a la función para crear los datos
             mostrarResultados(data.variantes);
 
         } catch (error) {
@@ -98,7 +98,7 @@
         resultadoDiv.innerHTML = '<p style="color: #7f8c8d;">Consultando base de datos médica...</p>';
 
         try {
-            const response = await fetch('http://127.0.0.1:8000/analysis/search-variant',{
+            const response = await fetch('/analysis/search-variant',{
                 method:'POST',
                 headers: {
                     'Content-Type': 'application/json'

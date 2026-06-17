@@ -11,23 +11,25 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 templates = Jinja2Templates(directory="app/templates")
 
+origins = [
+    "https://analizador-genetico.onrender.com", 
+    "http://127.0.0.1:8000",                    
+    "http://localhost:8000",                     
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], 
+    allow_origins=origins, 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],    
 )
 
-#Conexion
-#incluir las rutas de analizer.py en el servidor principal
-app.include_router(analizer.router, prefix="/analysis", tags="Genetic Analysis")
+app.include_router(analizer.router, prefix="/analysis", tags=["Genetic Analysis"])
 
 @app.get("/")
 async def root(request: Request):
-    
     return templates.TemplateResponse(request=request, name="index.html")
 
-#Ejecuta el servidor en el puerto 8000
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)

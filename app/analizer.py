@@ -35,14 +35,14 @@ def obtener_informacion(variantes):
                     if 'clinvar' in datos:
                         clinvar_data = datos['clinvar']
                         try:
-                            # 1. Normalizar rcv a lista (puede venir como dict o list)
+                            #  Normalizar rcv a lista (puede venir como dict o list)
                             rcv_data = clinvar_data.get('rcv', [])
                             rcv_list = rcv_data if isinstance(rcv_data, list) else [rcv_data]
 
                             if rcv_list:
                                 relevancia = rcv_list[0].get('clinical_significance', 'No especificada')
                                 
-                                # 2. Extraer enfermedad de 'conditions'
+                                #  Extraer enfermedad de 'conditions'
                                 condiciones = rcv_list[0].get('conditions', {})
                                 if isinstance(condiciones, list):
                                     enfermedad = condiciones[0].get('name', 'Enfermedad no especificada')
